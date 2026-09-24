@@ -1,0 +1,45 @@
+{
+  "run_at": "2026-09-22T22:24:47",
+  "embed_model": "intfloat/multilingual-e5-base",
+  "chunking": {
+    "target_tokens": 400,
+    "max_tokens": 440,
+    "overlap_ratio": 0.15
+  },
+  "dry_run": true,
+  "docs": 402,
+  "docs_skipped_existing": 0,
+  "docs_no_text": [
+    "bellmanPrikladnyeZadachiDinamicheskogo2013 (pdf)",
+    "filippovaOptimizaciyaRezhimovElektrostanciy (pdf)",
+    "GidroenergetikaObrezkovMalinin1981 (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "<внутренний документ, ключ скрыт> (pdf)",
+    "moiseevMatematicheskieZadachiSistemnogo (pdf)",
+    "panteleevOptimalnoeIspolzovanieVodnyh2023 (pdf)",
+    "sarkisyanOptimizaciyaParametrovObektov1984 (pdf)"
+  ],
+  "docs_no_bib": [],
+  "pages": 10688,
+  "empty_pages": 1807,
+  "blocks_total": 189459,
+  "blocks_repeated": 61041,
+  "blocks_symbolic": 24864,
+  "chunks": {
+    "pdf": 11656,
+    "note": 735
+  },
+  "embed_input_over_512": 17,
+  "chunks_total": 12391,
+  "chunk_tokens_mean": 392.7,
+  "chunk_tokens_median": 411,
+  "time_total_s": 90.0,
+  "time_parse_chunk_s": 89.8,
+  "time_embed_s": 0.0
+}

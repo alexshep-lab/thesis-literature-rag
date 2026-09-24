@@ -1,0 +1,308 @@
+# Eval-набор: 40 вопросов по литературе диссертации (28 по заметкам + 12 по PDF).
+# Вопросы 1–28 составлены по заметкам Individual_Notes так, чтобы ответ однозначно указывал на 1–3 источника (ключ Zotero).
+# Если одна работа лежит в Zotero дважды (RU/EN-версия, дубликат записи), в expect_sources оба ключа.
+# kind: lex — в вопросе есть редкий термин/имя собственное/номер документа;
+#       sem — вопрос-перефраз без «якорных» слов источника;
+# src_lang: язык полного текста источника (en — вопрос на русском к английской статье, кросс-языковой случай).
+# scan: true — PDF источника — скан без текстового слоя (в scope=pdf найти невозможно, только по заметке).
+#   Два таких вопроса (по внутренним документам, которые нельзя публиковать) убраны 24.09.2026; в наборе 40 вопросов.
+# split: dev/test — фиксированное разбиение 23.09.2026 до настройки ранжирования (random.Random(42), стратификация
+#        по группам same / cross / scan). Настройка — только на dev; test прогоняется один раз в конце.
+
+- q: "Какой алгоритм вместе с методом TOPSIS применяли для многокритериальной оптимизации каскада ГЭС, чтобы совместить максимум выработки и покрытие пиковой нагрузки?"
+  expect_sources: ["fengMultiObjectiveOperationCascade2019"]
+  must_contain: ["гравитацион"]
+  kind: lex
+  src_lang: en
+  split: test
+
+- q: "Как ограничение скорости изменения уровня верхнего бьефа, вызванное температурным состоянием бетона плотины, сказывается на выработке Красноярской ГЭС?"
+  expect_sources: ["aleksandrovskiiEffectRestrictingRate2017", "aleksandrovskiyVliyanieOgranicheniyaSkorosti2017"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  split: test
+
+- q: "Насколько и почему сместилась кривая связи расходов и уровней нижнего бьефа Волжской ГЭС по сравнению с проектной?"
+  expect_sources: ["aleksandrovskiyProblemyRazrabotkiPivr2018", "aleksandrovskiyProblemyRazrabotkiPivr2018a"]
+  must_contain: ["размыв"]
+  kind: lex
+  src_lang: ru
+  split: dev
+
+- q: "Какой алгоритм предложен для совместной работы Волжско-Камского каскада и Эвенкийской ГЭС в графиках нагрузки энергосистемы?"
+  expect_sources: ["aleksandrovskiyAlgoritmDlyaRascheta2018"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  split: test
+
+- q: "В какой работе впервые описан метод стохастического двойственного динамического программирования для планирования энергосистем и как он обходит проклятие размерности?"
+  expect_sources: ["pereiraMultistageStochasticOptimization1991"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Почему при учёте CVaR в SDDP стандартная оценка верхней границы по выборке сценариев становится неверной и как это исправить?"
+  expect_sources: ["garciaMulticutApproachCompute2023", "freitaspaulodacostaDualSDDPRiskaverse2023"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Что показало сравнение нейросети LSTM и регионализации параметров GR4J для прогноза стока в неизученных бассейнах Северо-Запада России?"
+  expect_sources: ["ayzelStreamflowPredictionUngauged2020"]
+  must_contain: ["LSTM"]
+  kind: lex
+  src_lang: en
+  split: test
+
+- q: "Как устроена первая национальная система оперативного прогноза речного стока в России OpenForecast и на каких моделях она основана?"
+  expect_sources: ["ayzelOpenForecastV2Development2021"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  split: test
+
+- q: "Как изменится годовой сток Волги и его внутригодовое распределение при глобальном потеплении на 1,5 и 2 градуса?"
+  expect_sources: ["PDFHydrologicalMeteorological2025"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Какие подходы к долгосрочному ансамблевому прогнозу притока талых вод в Чебоксарское водохранилище сравнивались?"
+  expect_sources: ["gelfanLongtermEnsembleForecast2018"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  split: dev
+
+- q: "Какую экономическую выгоду для гидроэнергетики дают заблаговременные прогнозы стока на реке Колумбия?"
+  expect_sources: ["hamletEconomicValueLongLead2002"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  split: test
+
+- q: "Почему LSTM с жёстким сохранением массы часто уступает обычной LSTM и как ослабление этого ограничения улучшает моделирование стока?"
+  expect_sources: ["wangMassConservationRelaxed2025"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: test
+
+- q: "Что такое физически-информированные нейронные сети и как их применяют для прямых и обратных задач с нелинейными уравнениями в частных производных?"
+  expect_sources: ["raissiPhysicsinformedNeuralNetworks2019"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Как устроен программный комплекс для оперативного водноэнергетического баланса ГЭС Волжско-Камского каскада, которым пользуется Системный оператор?"
+  expect_sources: ["egorovImitacionnoeModelirovanieOperativnogo2013"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  split: dev
+
+- q: "Почему уровень озера Байкал невозможно удерживать в метровом диапазоне, установленном постановлением правительства № 234?"
+  expect_sources: ["bolgovProblemyRegulirovaniyaIspolzovaniya2018"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  split: test
+
+- q: "Как метод достижимых целей и визуализация границы Парето помогают разрабатывать правила управления Иркутским водохранилищем?"
+  expect_sources: ["lotovVizualizaciyaGranicyPareto2013", "bolgovPrimenenieMetodovMnogokriterialnoy2012"]
+  must_contain: ["Парето"]
+  kind: lex
+  src_lang: ru
+  split: dev
+
+- q: "Подтверждают ли наблюдения на гидропостах отрицательные тренды стока, которые показывает глобальный реанализ речного стока GloFAS-ERA5?"
+  expect_sources: ["ervinzsoterTrendsGloFASERA5River2020"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  split: test
+
+- q: "Какое пространственное разрешение и какую модель поверхности суши использует реанализ ERA5-Land?"
+  expect_sources: ["munoz-sabaterERA5LandStateoftheartGlobal2021"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  split: test
+
+- q: "Как повысить точность спутниковой альтиметрии уровня воды в узких водохранилищах Волги, где отражения от берегов искажают сигнал радара?"
+  expect_sources: ["troitskayaAdaptiveRetrackingJason12014"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "На какие подсистемы декомпозируется электроэнергетическая система в методологии анализа установившихся режимов с «электрическим эквивалентом»?"
+  expect_sources: ["rusinaRazvitieTeoriiMetodologii2013"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  split: test
+
+- q: "Как учесть ошибки прогноза солнечной генерации без предположения о нормальном распределении при суточном планировании каскада ГЭС совместно с фотоэлектрической станцией?"
+  expect_sources: ["liDataDrivenChanceConstrainedSchedule2023"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Как агент глубокого обучения с подкреплением управляет каскадом водохранилищ в условиях неопределённости стока?"
+  expect_sources: ["xuDeepReinforcementLearning2025", "weissCascadeHydropowerPlant2025"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Какими способами автоматизированные гидрологические комплексы измеряют уровень воды по РД 52.08.869-2017?"
+  expect_sources: ["RD52088692017Metodikaa"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  split: test
+
+- q: "При какой невязке водный баланс на ГЭС считается сошедшимся согласно отраслевым правилам учёта стока воды?"
+  expect_sources: ["RD1533422156300Pravila", "RD1533422156400Metodicheskie"]
+  must_contain: []
+  kind: sem
+  src_lang: ru
+  split: dev
+
+- q: "Каким методом по архивным эксплуатационным данным восстанавливают актуальную зависимость уровня нижнего бьефа от расхода вместо устаревшей проектной кривой?"
+  expect_sources: ["tyagunovAktualizaciyaHarakteristikBefov2024", "tyagunovUpdatingCharacteristicsHydroelectric2025"]
+  must_contain: ["регресс"]
+  kind: sem
+  src_lang: ru
+  split: test
+
+- q: "Как при среднесрочном планировании режимов ГЭС одновременно учитывать рынок электроэнергии и рынок резервов мощности?"
+  expect_sources: ["helsethOptimalMediumTermHydropower2016"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Как многозадачная модель глубокого обучения обеспечивает соблюдение водного баланса в гидрологическом прогнозе?"
+  expect_sources: ["liEnforcingWaterBalance2023"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  split: dev
+
+- q: "Какой программный комплекс для суточного планирования режимов ЕЭС разработан на основе линейного программирования и используется Системным оператором?"
+  expect_sources: ["abakshinRazrabotkaMetodovAlgoritmov2004"]
+  must_contain: []
+  kind: sem
+  src_lang: ru
+
+# --- Вопросы 29–40 (добавлены 23.09.2026, origin: pdf) ---
+# Составлены по аннотации полного текста PDF, а не по заметке: для честного прогона scope=pdf.
+# Источники выбраны случайно (seed 20260923) среди PDF с текстовым слоем, не вошедших в вопросы по заметкам,
+# по 6 русскоязычных и 6 англоязычных. Вопросы добавлены ДО любых изменений ранжирования.
+  split: dev
+
+- q: "Какие этапы преобразования Краснодарского водохранилища выделены по спутниковым снимкам и полевым наблюдениям и что стало ключевым фактором его трансформации?"
+  expect_sources: ["pogorelovTransformaciyaKrasnodarskogoVodohranilishcha2019"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  origin: pdf
+  split: dev
+
+- q: "Какие методы искусственного интеллекта предлагались для оптимизации режимов энергосистемы Таджикистана с распределёнными возобновляемыми источниками?"
+  expect_sources: ["kirgizovRazvitieOptimizaciyaRezhimov2017"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  origin: pdf
+  split: dev
+
+- q: "Какими статистическими тестами проверяли однородность рядов годового и сезонного стока рек бассейна Верхней Оби и когда нарушилась стационарность?"
+  expect_sources: ["samoylovaOcenkaStacionarnostiGodovogo2024"]
+  must_contain: []
+  kind: lex
+  src_lang: ru
+  origin: pdf
+  split: test
+
+- q: "Как корректируют данные спутниковой альтиметрии по наземным наблюдениям, чтобы оценивать уровни воды крупных водохранилищ речного типа в России?"
+  expect_sources: ["vuglinskiyMetodologiyaAdaptaciiDannyh2022"]
+  must_contain: []
+  kind: sem
+  src_lang: ru
+  origin: pdf
+  split: dev
+
+- q: "Какие особенности современного водного баланса крупных речных бассейнов европейской части России выявлены за последние десятилетия?"
+  expect_sources: ["grigorevSovremennyeOsobennostiVodnogo2018"]
+  must_contain: []
+  kind: sem
+  src_lang: ru
+  origin: pdf
+  split: test
+
+- q: "Как цифровой двойник помогает выбирать параметры и режимы гибридного энергокомплекса с ветровой и солнечной генерацией в изолированном энергорайоне?"
+  expect_sources: ["tyagunovPrimenenieCifrovogoDvoynika2022"]
+  must_contain: []
+  kind: sem
+  src_lang: ru
+  origin: pdf
+  split: dev
+
+- q: "Может ли одна LSTM-модель, обученная сразу на многих водосборах, превзойти концептуальную модель SAC-SMA со снежным модулем Snow-17?"
+  expect_sources: ["kratzertRainfallRunoffModelling2018"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  origin: pdf
+  split: dev
+
+- q: "Почему совместные вероятностные ограничения при управлении каскадом водохранилищ с неопределённым притоком дают менее консервативные решения, чем индивидуальные ограничения или робастная модель?"
+  expect_sources: ["vanackooijJointChanceConstrained2014"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  origin: pdf
+  split: test
+
+- q: "Как учитывать риск наводнения при наполнении водохранилищ каскада Силоду, максимизируя выработку электроэнергии?"
+  expect_sources: ["xuStochasticProgrammingJoint2017"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  origin: pdf
+  split: test
+
+- q: "Какой сеточный набор данных о стоке с разрешением 0,5° для северо-запада России построен на нейросетях LSTM и с чем его сравнивали?"
+  expect_sources: ["ayzelDevelopmentRegionalGridded2021"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  origin: pdf
+  split: test
+
+- q: "Чем глубокое обучение может помочь гидрологам в проблемах эквифинальности, масштабирования и регионализации параметров?"
+  expect_sources: ["shenTransdisciplinaryReviewDeep2018"]
+  must_contain: []
+  kind: sem
+  src_lang: en
+  origin: pdf
+  split: test
+
+- q: "Как физически-информированная нейросеть решает уравнение Ричардса для переноса влаги в ненасыщенной почве?"
+  expect_sources: ["maltsevPhysicsInformedNeuralNetwork2025a"]
+  must_contain: []
+  kind: lex
+  src_lang: en
+  origin: pdf
+  split: dev
+

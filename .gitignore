@@ -1,0 +1,23 @@
+# секреты
+.env
+# окружение
+.venv/
+__pycache__/
+*.pyc
+# корпус, данные, модели — в репозиторий не попадают
+data/
+corpus/
+*.pdf
+*.bib
+models/
+.cache/
+hf_cache/
+*.dump
+*.sql.gz
+# сырые ответы eval могут содержать цитаты из корпуса
+evals/results/*.jsonl
+
+# личные рабочие файлы (не публикуются)
+STATUS.md
+EVIDENCE_DRAFT.md
+ЗАДАНИЕ_*.md
