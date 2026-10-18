@@ -8,6 +8,7 @@ import time
 import requests
 
 from .config import LLM_MODEL, LLM_NUM_PREDICT, LLM_TIMEOUT_S, OLLAMA_URL
+from .tracing import llm_span, record_llm_output
 
 
 def chat(messages: list[dict], schema: dict | None = None, temperature: float = 0.1,
@@ -23,9 +24,12 @@ def chat(messages: list[dict], schema: dict | None = None, temperature: float = 
     if schema is not None:
         payload["format"] = schema
     t0 = time.perf_counter()
-    r = requests.post(f"{OLLAMA_URL}/api/chat", json=payload, timeout=LLM_TIMEOUT_S)
-    r.raise_for_status()
-    data = r.json()
+    span_name = "ollama.chat_json" if schema is not None else "ollama.chat"
+    with llm_span(span_name, payload["model"], messages, options) as span:
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json=payload, timeout=LLM_TIMEOUT_S)
+        r.raise_for_status()
+        data = r.json()
+        record_llm_output(span, data["message"]["content"], data)
     meta = {
         "wall_s": round(time.perf_counter() - t0, 2),
         "prompt_tokens": data.get("prompt_eval_count"),

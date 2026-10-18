@@ -15,6 +15,9 @@ def main() -> None:
         sys.exit(1)
     import importlib
 
+    from .tracing import setup
+
+    setup()  # RAG_TRACE=1 — трейсы в локальный Phoenix; без флага ничего не делает
     cmd = sys.argv.pop(1)
     sys.argv[0] = f"rag {cmd}"
     importlib.import_module(COMMANDS[cmd]).main()

@@ -8,3 +8,10 @@ pyyaml>=6.0
 pymupdf>=1.24
 python-dotenv>=1.0
 requests>=2.31
+# MCP-сервер (rag/mcp_server.py); в SDK 2.x FastMCP переименован в MCPServer
+mcp>=2.3,<3
+# трейсинг (нужен только при RAG_TRACE=1): локальный Phoenix + OpenTelemetry + OpenInference для LangChain/LangGraph
+arize-phoenix>=20.0
+openinference-instrumentation-langchain>=0.1.79
+opentelemetry-sdk>=1.45
+opentelemetry-exporter-otlp-proto-http>=1.45
