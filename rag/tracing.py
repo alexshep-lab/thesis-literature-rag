@@ -49,7 +49,12 @@ def setup() -> bool:
         "service.name": "thesis-literature-rag",
         "openinference.project.name": os.getenv("RAG_TRACE_PROJECT", "thesis-rag"),
     }))
-    provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=url)))
+    import requests
+
+    # trust_env=False: экспорт не идёт через HTTP(S)_PROXY / системный прокси, даже если 127.0.0.1 не в исключениях
+    session = requests.Session()
+    session.trust_env = False
+    provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=url, session=session)))
     trace.set_tracer_provider(provider)
     LangChainInstrumentor().instrument(tracer_provider=provider)
     _tracer = trace.get_tracer("rag")

@@ -8,11 +8,13 @@ stdout занят протоколом MCP: всё диагностическо�
 from __future__ import annotations
 
 import logging
+import os
 import sys
 from typing import Literal
 
 import anyio
 from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel, Field
 
@@ -71,13 +73,35 @@ class Citation(BaseModel):
 class AskResult(BaseModel):
     answer: str
     self_check: Literal["passed", "failed"] = Field(
-        description="passed — не меньше 3 подтверждённых цитат; failed — меньше даже после повтора поиска")
+        description="passed — подтверждённых цитат не меньше min(3, число фрагментов в контексте); "
+                    "failed — меньше даже после повтора поиска. Если context_sources пуст, источники не найдены")
     citations: list[Citation] = Field(description="только цитаты, дословно найденные во фрагментах")
     dropped_citations: int = Field(description="сколько цитат модели отброшено проверкой")
     context_sources: list[str] = Field(description="фрагменты, которые видела модель: ключ | файл | страница")
     retries: int
-    search_query: str = Field(description="запрос последней попытки поиска (после повтора — переформулированный)")
+    search_query: str = Field(description="запрос последней попытки поиска (после повтора — переформулированный); "
+                                          "при self_check=failed ответ и цитаты — из лучшей попытки, она может быть первой")
     timings_s: dict[str, float]
+
+
+# Один тяжёлый вызов за раз: параллельные вызовы на холодном старте грузили бы e5 и reranker дважды
+# (lru_cache не защищён от гонки), а вторая копия reranker'а на GPU рядом с Ollama — риск CUDA OOM.
+_HEAVY = anyio.CapacityLimiter(1)
+
+
+async def _run(fn, *args):
+    import psycopg
+    import requests
+
+    try:
+        return await anyio.to_thread.run_sync(fn, *args, limiter=_HEAVY)
+    except psycopg.OperationalError as e:
+        log.exception("БД недоступна")
+        raise ToolError("База PostgreSQL недоступна: запущен ли контейнер rag-pgvector (порт 5433) и задан ли "
+                        "PGPASSWORD в .env?") from e
+    except requests.RequestException as e:
+        log.exception("Ollama недоступна")
+        raise ToolError(f"Локальная LLM (Ollama) не ответила: {type(e).__name__}. Запущена ли Ollama с qwen2.5:7b?") from e
 
 
 def _clip(s: str, n: int) -> str:
@@ -156,7 +180,7 @@ async def search(query: str, mode: Mode = "hybrid_rerank", k: int = 6, pdf_only:
     """
     k = max(1, min(k, MAX_K))
     log.info("search mode=%s k=%s pdf_only=%s", mode, k, pdf_only)
-    return await anyio.to_thread.run_sync(_search_sync, query, mode, k, pdf_only)
+    return await _run(_search_sync, query, mode, k, pdf_only)
 
 
 @mcp.tool(annotations=_READ_ONLY)
@@ -174,10 +198,13 @@ async def ask(question: str, mode: Mode = "hybrid_rerank", pdf_only: bool = True
     fts — быстрее и тоже сильный на русских вопросах к английским статьям.
     """
     log.info("ask mode=%s pdf_only=%s", mode, pdf_only)
-    return await anyio.to_thread.run_sync(_ask_sync, question, mode, pdf_only)
+    return await _run(_ask_sync, question, mode, pdf_only)
 
 
 def main() -> None:
+    # Без таймаута psycopg ждёт недоступную БД минутами (на этой машине 4 мин 20 с) — агент висит.
+    # Только для MCP-сервера: CLI и eval не меняются.
+    os.environ.setdefault("PGCONNECT_TIMEOUT", "10")
     if tracing.setup():
         log.info("трейсинг включён: %s", tracing.endpoint())
     mcp.run("stdio")

@@ -198,7 +198,8 @@ scope=all, 40 вопросов: vector 0.93 / 0.93 / 0.800, fts 1.00 / 1.00 / 0.
 Ответы структурированные (pydantic → `outputSchema` и `structuredContent`). В описаниях инструментов сказано, когда какой режим брать: `fts` с переводом сильнее на кросс-языковых вопросах, reranker лучше по качеству, но дороже по времени.
 
 ```bash
-# Claude Code подхватывает сервер из .mcp.json (project scope) после подтверждения в /mcp
+# .mcp.json (project scope), путь к .venv относительный и в стиле Windows: Claude Code нужно открыть
+# в папке rag_dissertation и подтвердить сервер; из корня другого проекта он не подхватится
 .venv/Scripts/python.exe scripts/mcp_smoke.py              # smoke-тест через клиент SDK: list_tools, search, ask
 .venv/Scripts/python.exe scripts/mcp_smoke.py --eval 5 7   # вопросы из evals/questions.yaml
 ```

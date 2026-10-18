@@ -2,7 +2,7 @@
   "mcpServers": {
     "thesis-rag": {
       "type": "stdio",
-      "command": ".venv/Scripts/python.exe",
+      "command": ".venv\\Scripts\\python.exe",
       "args": ["-m", "rag.mcp_server"],
       "env": {}
     }
