@@ -84,7 +84,7 @@ class AskResult(BaseModel):
     timings_s: dict[str, float]
 
 
-# Один тяжёлый вызов за раз: параллельные вызовы на холодном старте грузили бы e5 и reranker дважды
+# Один вызов за раз (search и ask в общей очереди; ask может держать её десятки секунд). Параллельные вызовы на холодном старте грузили бы e5 и reranker дважды
 # (lru_cache не защищён от гонки), а вторая копия reranker'а на GPU рядом с Ollama — риск CUDA OOM.
 _HEAVY = anyio.CapacityLimiter(1)
 
@@ -99,6 +99,13 @@ async def _run(fn, *args):
         log.exception("БД недоступна")
         raise ToolError("База PostgreSQL недоступна: запущен ли контейнер rag-pgvector (порт 5433) и задан ли "
                         "PGPASSWORD в .env?") from e
+    except RuntimeError as e:
+        if "PGPASSWORD" not in str(e):
+            raise
+        raise ToolError(str(e)) from e  # нет .env с паролем БД
+    except requests.HTTPError as e:
+        log.exception("Ollama вернула ошибку")
+        raise ToolError(f"Ollama вернула HTTP {e.response.status_code}: скачана ли модель qwen2.5:7b?") from e
     except requests.RequestException as e:
         log.exception("Ollama недоступна")
         raise ToolError(f"Локальная LLM (Ollama) не ответила: {type(e).__name__}. Запущена ли Ollama с qwen2.5:7b?") from e
@@ -193,7 +200,7 @@ async def ask(question: str, mode: Mode = "hybrid_rerank", pdf_only: bool = True
     переформулируется и поиск повторяется один раз. self_check=failed означает слабую опору на источники —
     так и сообщай пользователю, не выдавай ответ за надёжный.
 
-    Медленно: ~15–60 с (локальная LLM). Для поиска источников без ответа бери search.
+    Медленно: ~15–60 с (локальная LLM); вызовы сервера идут по одному, search во время ask ждёт. Для поиска источников без ответа бери search.
     mode — как в search; hybrid_rerank (по умолчанию) даёт лучшие цитаты, но дороже по времени;
     fts — быстрее и тоже сильный на русских вопросах к английским статьям.
     """
